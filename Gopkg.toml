@@ -26,7 +26,6 @@
 
 [metadata.heroku]
   root-package = "github.com/midorigreen/linebot-pwg"
-  go-version = "go1.11"
   ensure = "true"
 
 [[constraint]]
