@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
 	"os"
@@ -11,6 +10,7 @@ import (
 
 const accessToken = "LBP_ACCESS_TOKEN"
 const secretToken = "LBP_SECRET_TOKEN"
+const envPort = "PORT"
 
 var bot *linebot.Client
 
@@ -34,11 +34,7 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
-			leftBtn := linebot.NewMessageAction("left", "left clicked")
-			rightBtn := linebot.NewMessageAction("right", "right clicked")
-			template := linebot.NewConfirmTemplate("Hello World", leftBtn, rightBtn)
-			message := linebot.NewTemplateMessage("Hi", template)
-
+			message := linebot.NewTextMessage("Hello World")
 			_, err := bot.ReplyMessage(event.ReplyToken, message).Do()
 			if err != nil {
 				log.Println(err)
@@ -52,16 +48,16 @@ func pingHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK"))
 }
 
-func run(port string) error {
+func run() error {
 	http.HandleFunc("/hello", helloHandler)
 	http.HandleFunc("/ping", pingHandler)
+
+	port := os.Getenv(envPort)
 	return http.ListenAndServe(":"+port, nil)
 }
 
 func main() {
-	port := flag.String("p", "8080", "port")
-	flag.Parse()
-	if err := run(*port); err != nil {
+	if err := run(); err != nil {
 		log.Fatalln(err)
 	}
 }

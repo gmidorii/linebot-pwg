@@ -12,8 +12,8 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ./pwg-server .
 
 FROM alpine:latest
 
+RUN apk --no-cache add ca-certificates
 WORKDIR /opt/
 COPY --from=0 /go/src/github.com/midorigreen/sample/Go/linebot-pwg/pwg-server .
 
-ENTRYPOINT [ "./pwg-server" ]
-CMD ["-p", "80"]
+CMD [ "./pwg-server" ]
