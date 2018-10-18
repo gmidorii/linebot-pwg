@@ -25,6 +25,15 @@ func init() {
 	bot = botTmp
 }
 
+func message(event *linebot.Event, w http.ResponseWriter) error {
+	message := linebot.NewTextMessage("Hello World")
+	_, err := bot.ReplyMessage(event.ReplyToken, message).Do()
+	if err != nil {
+		log.Println(err)
+	}
+	return nil
+}
+
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
 	if err != nil {
@@ -33,12 +42,12 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, event := range events {
-		if event.Type == linebot.EventTypeMessage {
-			message := linebot.NewTextMessage("Hello World")
-			_, err := bot.ReplyMessage(event.ReplyToken, message).Do()
-			if err != nil {
-				log.Println(err)
-			}
+		switch event.Type {
+		case linebot.EventTypeMessage:
+			message(event, w)
+		case linebot.EventTypeBeacon:
+		default:
+			log.Printf("not supported type: %v", event.Type)
 		}
 	}
 }
