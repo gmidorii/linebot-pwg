@@ -24,6 +24,10 @@
 #   go-tests = true
 #   unused-packages = true
 
+[metadata.heroku]
+  root-package = "github.com/midorigreen/linebot-pwg"
+  go-version = "go1.11"
+  ensure = "true"
 
 [[constraint]]
   name = "github.com/line/line-bot-sdk-go"
