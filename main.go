@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -62,6 +63,7 @@ func run() error {
 	http.HandleFunc("/ping", pingHandler)
 
 	port := os.Getenv(envPort)
+	fmt.Printf("START: port=%v\n", port)
 	return http.ListenAndServe(":"+port, nil)
 }
 
